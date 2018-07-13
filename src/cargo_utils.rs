@@ -1,7 +1,6 @@
+use graph::Dep;
 use std::{fs::File, io::Read};
 use toml_edit::{Document, Item, Value};
-
-use utils::VecSearch;
 
 pub fn get_members(mut f: File) -> Vec<String> {
     let mut content = String::new();
@@ -40,8 +39,9 @@ pub fn batch_load_configs(members: &Vec<String>) -> Vec<Document> {
         .collect::<Vec<Document>>()
 }
 
-pub fn parse_config(doc: &Document, members: &Vec<String>) -> (String, Vec<String>) {
+pub fn parse_config(doc: &Document, members: &Vec<String>) -> (String, Vec<Dep>) {
     (
+        /* First part extracts the name of this document */
         format!(
             "{}",
             match &doc["package"]["name"] {
@@ -51,12 +51,25 @@ pub fn parse_config(doc: &Document, members: &Vec<String>) -> (String, Vec<Strin
         ).replace("\"", "")
             .trim()
             .into(),
+        /* Second part extracts the dependencies to other members */
         match &doc["dependencies"] {
             Item::Table(ref t) => members
                 .iter()
-                .filter(move |m| t.contains_key(m))
-                .map(|s| s.clone())
-                .collect::<Vec<String>>(),
+                .map(|m| (m, t.get(m)))
+                .map(|(m, v)| match v {
+                    Some(Item::Value(Value::InlineTable(table))) => (m, Some(table)),
+                    None => (m, None),
+                    _ => unimplemented!(),
+                })
+                .filter(|(_, v)| v.is_some())
+                .map(|(m, t)| (m, t.unwrap().get("version")))
+                .filter(|(_, t)| t.is_some())
+                .map(|(m, v)| (m, format!("{}", v.unwrap()).replace("\"", "").trim().into()))
+                .map(|(n, v): (&String, String)| Dep {
+                    name: format!("{}", n),
+                    version: format!("{}", v),
+                })
+                .collect::<Vec<Dep>>(),
             _ => unreachable!(),
         },
     )

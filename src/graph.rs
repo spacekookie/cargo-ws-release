@@ -6,10 +6,16 @@
 
 use std::collections::HashMap;
 
+#[derive(Debug, Clone)]
+pub struct Dep {
+    pub name: String,
+    pub version: String,
+}
+
 #[derive(Debug)]
 pub struct Node {
     pub name: String,
-    pub deps: Vec<String>,
+    pub deps: Vec<Dep>,
 }
 
 #[derive(Debug)]
@@ -34,8 +40,8 @@ impl DepGraph {
         );
     }
 
-    pub fn add_dependency(mut self, name: &str, dep: &str) -> Self {
-        self.nodes.get_mut(name).unwrap().deps.push(dep.into());
+    pub fn add_dependency(mut self, name: &str, dep: &Dep) -> Self {
+        self.nodes.get_mut(name).unwrap().deps.push(dep.clone());
         self
     }
 }
