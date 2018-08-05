@@ -5,7 +5,7 @@ extern crate toml_edit;
 
 use clap::{App, Arg};
 use std::fs::File;
-use std::{env, process};
+use std::process;
 
 mod cargo_utils;
 mod graph;
