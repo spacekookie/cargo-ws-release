@@ -1,6 +1,9 @@
+#[macro_use]
+extern crate clap;
 extern crate toml;
 extern crate toml_edit;
 
+use clap::{App, Arg};
 use std::fs::File;
 use std::{env, process};
 
@@ -11,12 +14,21 @@ mod utils;
 use graph::DepGraph;
 
 fn main() {
-    if env::args().len() < 2 {
-        eprintln!("Usage: cargo ws-release <major|minor|patch|rc|beta|alpha>");
-        process::exit(255);
-    }
+    let matches = App::new("cargo-ws-release")
+        .version(crate_version!())
+        .author(crate_authors!())
+        .arg(
+            Arg::with_name("Level")
+                .short("l")
+                .long("level")
+                .takes_value(true)
+                .possible_values(&["major", "minor", "patch", "rc", "beta", "alpha"])
+                .required(true)
+                .help("Defines the release level"),
+        )
+        .get_matches();
 
-    let level = env::args().next().unwrap();
+    let level = matches.value_of("Level").unwrap();
     match File::open("Cargo.toml") {
         Ok(f) => do_batch_release(f, &level),
         _ => {
