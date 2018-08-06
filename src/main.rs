@@ -26,6 +26,10 @@ fn main() {
                 .required(true)
                 .help("Defines the release level"),
         )
+        .arg(
+            Arg::with_name("Crate")
+                .help("Specifies the name of the crate to be released. If none specified all the crates will be bumped."),
+        )
         .get_matches();
 
     let level = matches.value_of("Level").unwrap();
