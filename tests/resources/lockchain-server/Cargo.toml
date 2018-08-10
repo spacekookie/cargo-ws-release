@@ -1,0 +1,12 @@
+[package]
+name = "lockchain-server"
+version = "0.1.0"
+authors = ["Katharina Fey <kookie@spacekookie.de>"]
+
+[dependencies]
+lockchain-core = { path = "../lockchain-core" }
+lockchain-files = { path = "../lockchain-files" }
+lockchain-http = { path = "../lockchain-http" }
+
+clap = "2.0"
+insult = "2.0.3"
