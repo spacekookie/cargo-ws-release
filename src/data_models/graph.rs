@@ -20,7 +20,7 @@ pub struct Node {
 
 #[derive(Debug)]
 pub struct DepGraph {
-    nodes: HashMap<String, Node>,
+    pub nodes: HashMap<String, Node>,
 }
 
 impl DepGraph {

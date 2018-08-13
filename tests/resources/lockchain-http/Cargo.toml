@@ -1,0 +1,23 @@
+[package]
+name = "lockchain-http"
+description = "Generic HTTP interface crate for the lockchain ecosystem. Can serve both encrypted and cleartext records"
+version = "0.4.1-alpha.0"
+authors = ["Katharina Fey <kookie@spacekookie.de>"]
+
+documentation = "https://docs.rs/lockchain-http"
+homepage = "https://github.com/spacekookie/lockchain/tree/master/lockchain-http"
+readme = "README.md"
+license = "MIT/X11 OR Apache-2.0"
+
+[dependencies]
+lockchain-core = { version = "0.9.1-alpha.0", path = "../lockchain-core" }
+env_logger = "0.5"
+
+# Serialisation stack
+serde = "1.0"
+serde_derive = "1.0"
+
+# Web Stack
+futures = "0.1"
+actix = "0.5"
+actix-web = "0.6"

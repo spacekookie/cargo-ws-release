@@ -11,8 +11,7 @@ pub fn get_members(mut f: File) -> Vec<String> {
         .expect("`Cargo.toml` wasn't syntactically correct...");
 
     match &doc["workspace"]["members"] {
-        Item::Value(Value::Array(a)) => a
-            .iter()
+        Item::Value(Value::Array(a)) => a.iter()
             .map(|v| match v {
                 Value::String(s) => format!("{}", s),
                 _ => unreachable!(),
