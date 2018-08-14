@@ -43,5 +43,5 @@ fn parse_level_from_str() {
 
     levels
         .iter()
-        .for_each(|(level_str, level)| assert_eq!(*level, Level::from_str(level_str)));
+        .for_each(|(level_str, level)| assert_eq!(Level::from_str(level_str), *level));
 }
