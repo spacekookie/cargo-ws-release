@@ -2,6 +2,7 @@ extern crate toml;
 extern crate toml_edit;
 
 pub use data_models::graph;
+use data_models::level::Level;
 use graph::DepGraph;
 use std::fs::File;
 pub use utilities::cargo_utils;
@@ -10,7 +11,7 @@ pub use utilities::utils;
 pub mod data_models;
 pub mod utilities;
 
-pub fn do_batch_release(f: File, lvl: &str) -> DepGraph {
+pub fn do_batch_release(f: File, lvl: &Level) -> DepGraph {
     let members = cargo_utils::get_members(f);
     let configs = cargo_utils::batch_load_configs(&members);
 

@@ -4,6 +4,7 @@ extern crate clap;
 extern crate toml;
 extern crate toml_edit;
 
+use cargo_ws_release::data_models::level::Level;
 use cargo_ws_release::do_batch_release;
 use clap::{App, Arg};
 use std::fs::File;
@@ -29,6 +30,7 @@ fn main() {
         .get_matches();
 
     let level = matches.value_of("Level").unwrap();
+    let level = Level::from_str(level).expect("Failed to parse level");
     match File::open("Cargo.toml") {
         Ok(f) => {
             let _dep_graph = do_batch_release(f, &level);
