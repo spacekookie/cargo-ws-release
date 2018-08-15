@@ -99,18 +99,12 @@ fn bump_prerelease_version(version: &mut Version, prerelease_label: &str) -> Vec
             _ => false,
         };
 
-        let prerelease_version = if let Some(v) = version.pre.get(1) {
-            if let Identifier::Numeric(n) = *v {
-                if prerelease_label_exists {
-                    n + 1
-                } else {
-                    1
-                }
-            } else {
-                1
-            }
-        } else {
-            1
+        let prerelease_version = match version.pre.get(1) {
+            Some(v) => match v {
+                Identifier::Numeric(n) if prerelease_label_exists => n + 1,
+                _ => 1,
+            },
+            _ => 1,
         };
 
         return vec![
