@@ -1,3 +1,10 @@
+pub static MAJOR: &'static str = "major";
+pub static MINOR: &'static str = "minor";
+pub static PATCH: &'static str = "patch";
+pub static ALPHA: &'static str = "alpha";
+pub static BETA: &'static str = "beta";
+pub static RC: &'static str = "rc";
+
 #[derive(Debug, PartialEq)]
 pub enum Level {
     Major,
