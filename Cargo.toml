@@ -4,5 +4,5 @@ version = "0.1.0"
 authors = ["Katharina Fey <kookie@spacekookie.de>"]
 
 [dependencies]
-toml = "0.4.0"
-toml_edit = "0.1.3"
+toml_edit = "0.1.0"
+semver = "0.9.0"

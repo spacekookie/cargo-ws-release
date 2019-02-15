@@ -19,7 +19,7 @@ pub fn get_members(mut f: File) -> Vec<String> {
             })
             .map(|s| s.replace("\"", "").trim().into())
             .collect::<Vec<String>>(),
-        _ => unreachable!(),
+        _ => panic!("Error: not running on a workspace repository!"),
     }
 }
 
@@ -46,11 +46,12 @@ pub fn parse_config(doc: &Document, members: &Vec<String>) -> (String, Vec<Dep>)
             "{}",
             match &doc["package"]["name"] {
                 Item::Value(Value::String(s)) => s,
-                _ => unreachable!(),
+                _ => panic!("Badly formatted `Cargo.toml`: package.name isn't a String!"),
             }
-        ).replace("\"", "")
-            .trim()
-            .into(),
+        )
+        .replace("\"", "")
+        .trim()
+        .into(),
         /* Second part extracts the dependencies to other members */
         match &doc["dependencies"] {
             Item::Table(ref t) => members
@@ -63,14 +64,21 @@ pub fn parse_config(doc: &Document, members: &Vec<String>) -> (String, Vec<Dep>)
                 })
                 .filter(|(_, v)| v.is_some())
                 .map(|(m, t)| (m, t.unwrap().get("version")))
-                .filter(|(_, t)| t.is_some())
+                .filter(|(_, t)| {
+                    if t.is_some() {
+                        true
+                    } else {
+                        println!("[warn]: a `None` `version` is present. Publishing not advised");
+                        false
+                    }
+                })
                 .map(|(m, v)| (m, format!("{}", v.unwrap()).replace("\"", "").trim().into()))
                 .map(|(n, v): (&String, String)| Dep {
                     name: format!("{}", n),
                     version: format!("{}", v),
                 })
                 .collect::<Vec<Dep>>(),
-            _ => unreachable!(),
+            _ => panic!("Badly formatted `Cargo.toml`: `dependencies` isn't a tree-node!"),
         },
     )
 }
